@@ -1,0 +1,13 @@
+package cetam.projeto02grupo02;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class Projeto02Grupo02ApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

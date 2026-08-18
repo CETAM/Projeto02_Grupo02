@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Relatórios')}"></head>
+<body class="d-flex">
+<div th:replace="~{fragments/layout :: sidebar('relatorios')}"></div>
+<div class="flex-grow-1 d-flex flex-column">
+    <nav th:replace="~{fragments/layout :: topbar}"></nav>
+    <main class="p-4">
+        <h3 class="fw-bold mb-4">Relatórios do Sistema</h3>
+
+        <div class="row g-4">
+            <!-- 1. Pedidos por Cliente -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 bg-white h-100">
+                    <i class="bi bi-person-lines-fill fs-2 text-primary mb-2"></i>
+                    <h5 class="fw-bold">Pedidos por Cliente</h5>
+                    <p class="text-muted small">Consulte todo o histórico de compras e faturamento por cliente.</p>
+                    <form th:action="@{/relatorios/cliente}" method="get" class="mt-auto">
+                        <select name="idCliente" class="form-select mb-2" required>
+                            <option value="">Selecione o Cliente...</option>
+                            <option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nomeCliente}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Gerar Relatório</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 2. Vendas por Período -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 bg-white h-100">
+                    <i class="bi bi-calendar-range-fill fs-2 text-success mb-2"></i>
+                    <h5 class="fw-bold">Vendas por Período</h5>
+                    <p class="text-muted small">Filtragem de faturamento e pedidos entre duas datas.</p>
+                    <form th:action="@{/relatorios/periodo}" method="get" class="mt-auto">
+                        <input type="date" name="inicio" class="form-control form-control-sm mb-2" required>
+                        <input type="date" name="fim" class="form-control form-control-sm mb-2" required>
+                        <button type="submit" class="btn btn-success btn-sm w-100">Filtrar Vendas</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 3. Estoque em Falta -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 bg-white h-100">
+                    <i class="bi bi-exclamation-triangle-fill fs-2 text-danger mb-2"></i>
+                    <h5 class="fw-bold">Produtos em Falta</h5>
+                    <p class="text-muted small">Listagem de itens com estoque abaixo do mínimo de segurança.</p>
+                    <a th:href="@{/relatorios/estoque-falta}" class="btn btn-danger btn-sm w-100 mt-auto">Consultar Alertas</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

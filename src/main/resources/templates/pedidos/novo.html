@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Novo Pedido')}"></head>
+<body class="d-flex">
+<div th:replace="~{fragments/layout :: sidebar('pedidos')}"></div>
+<div class="flex-grow-1 d-flex flex-column">
+    <nav th:replace="~{fragments/layout :: topbar}"></nav>
+    <main class="p-4">
+        <h3 class="fw-bold mb-4">Novo Pedido de Venda</h3>
+
+        <form th:action="@{/pedidos/salvar}" method="post" id="formPedido">
+            <div class="row g-4">
+                <!-- Painel Esquerdo: Seleção do Cliente e Produtos -->
+                <div class="col-md-5">
+                    <div class="card card-custom p-4 bg-white mb-4">
+                        <h5 class="fw-bold mb-3">1. Selecionar Cliente</h5>
+                        <select class="form-select mb-3" name="idCliente" required>
+                            <option value="">— Escolha o Cliente —</option>
+                            <option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nomeCliente} + ' (CPF: ' + ${c.cpf} + ')'"></option>
+                        </select>
+                    </div>
+
+                    <div class="card card-custom p-4 bg-white">
+                        <h5 class="fw-bold mb-3">2. Adicionar Itens</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Produto</label>
+                            <select class="form-select" id="selectProduto">
+                                <option value="">— Escolha o Produto —</option>
+                                <option th:each="pr : ${produtos}"
+                                        th:value="${pr.idProduto}"
+                                        th:data-nome="${pr.nomeProduto}"
+                                        th:data-preco="${pr.precoVenda}"
+                                        th:text="${pr.nomeProduto} + ' - R$ ' + ${pr.precoVenda}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quantidade</label>
+                            <input type="number" class="form-control" id="inputQtd" value="1" min="1">
+                        </div>
+                        <button type="button" class="btn btn-purple w-100" onclick="adicionarItem()"><i class="bi bi-plus-circle"></i> Inserir no Pedido</button>
+                    </div>
+                </div>
+
+                <!-- Painel Direito: Carrinho do Pedido -->
+                <div class="col-md-7">
+                    <div class="card card-custom p-4 bg-white">
+                        <h5 class="fw-bold mb-3">Itens do Pedido</h5>
+                        <div class="table-responsive mb-4">
+                            <table class="table align-middle" id="tabelaItens">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Qtd</th>
+                                    <th>Valor Un.</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Preenchido via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-4">
+                            <span class="fs-5 fw-bold">Valor Total:</span>
+                            <span class="fs-3 fw-bold text-success" id="labelTotal">R$ 0,00</span>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg w-100 fw-bold"><i class="bi bi-check-circle-fill"></i> Concluir Pedido e Baixar Estoque</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+
+<script>
+    let total = 0;
+
+    function adicionarItem() {
+        const select = document.getElementById("selectProduto");
+        const prodId = select.value;
+        if (!prodId) return alert("Selecione um produto!");
+
+        const nome = select.options[select.selectedIndex].getAttribute("data-nome");
+        const preco = parseFloat(select.options[select.selectedIndex].getAttribute("data-preco"));
+        const qtd = parseInt(document.getElementById("inputQtd").value);
+        const subtotal = preco * qtd;
+
+        const tbody = document.querySelector("#tabelaItens tbody");
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                <td>${nome} <input type="hidden" name="produtosIds" value="${prodId}"></td>
+                <td>${qtd} <input type="hidden" name="quantidades" value="${qtd}"></td>
+                <td>R$ ${preco.toFixed(2)}</td>
+                <td class="fw-bold">R$ ${subtotal.toFixed(2)}</td>
+                <td><button type="button" class="btn btn-outline-danger btn-sm" onclick="removerItem(this, ${subtotal})"><i class="bi bi-x"></i></button></td>
+            `;
+        tbody.appendChild(row);
+
+        total += subtotal;
+        document.getElementById("labelTotal").innerText = "R$ " + total.toFixed(2);
+    }
+
+    function removerItem(btn, subtotal) {
+        btn.closest("tr").remove();
+        total -= subtotal;
+        document.getElementById("labelTotal").innerText = "R$ " + total.toFixed(2);
+    }
+</script>
+</body>
+</html>

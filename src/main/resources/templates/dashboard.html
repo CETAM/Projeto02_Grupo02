@@ -1,1 +1,106 @@
-<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>Title</title></head><body></body></html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body class="d-flex">
+
+<!-- Sidebar -->
+<div th:replace="~{fragments/layout :: sidebar('dashboard')}"></div>
+
+<!-- Conteúdo Principal -->
+<div class="flex-grow-1 d-flex flex-column" style="height: 100vh;">
+    <!-- Topbar -->
+    <nav th:replace="~{fragments/layout :: topbar}"></nav>
+
+    <main class="p-4 overflow-auto flex-grow-1">
+        <h3 class="fw-bold mb-4">Painel de Controle</h3>
+
+        <!-- Cards Resumo -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card card-custom p-3 bg-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted small fw-bold text-uppercase">Clientes Cadastrados</div>
+                            <div class="fs-2 fw-bold text-dark" th:text="${totalClientes != null ? totalClientes : 0}">0</div>
+                        </div>
+                        <div class="p-3 rounded-circle bg-primary bg-opacity-10 text-primary fs-3">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-custom p-3 bg-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted small fw-bold text-uppercase">Total de Produtos</div>
+                            <div class="fs-2 fw-bold text-dark" th:text="${totalProdutos != null ? totalProdutos : 0}">0</div>
+                        </div>
+                        <div class="p-3 rounded-circle bg-success bg-opacity-10 text-success fs-3">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-custom p-3 bg-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted small fw-bold text-uppercase">Pedidos Registrados</div>
+                            <div class="fs-2 fw-bold text-purple" th:text="${pedidosRecentes != null ? pedidosRecentes.size() : 0}">0</div>
+                        </div>
+                        <div class="p-3 rounded-circle bg-opacity-10 fs-3" style="background-color: rgba(124,58,237,0.1); color: #7c3aed;">
+                            <i class="bi bi-cart-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Pedidos Recentes -->
+        <div class="card card-custom p-4 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Pedidos Recentes</h5>
+                <a th:href="@{/pedidos/novo}" class="btn btn-purple btn-sm"><i class="bi bi-plus-lg"></i> Novo Pedido</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th># ID</th>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Ação</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${pedidosRecentes == null or pedidosRecentes.isEmpty()}">
+                        <td colspan="6" class="text-center text-muted">Nenhum pedido recente encontrado.</td>
+                    </tr>
+                    <tr th:each="p : ${pedidosRecentes}">
+                        <td class="fw-bold text-secondary" th:text="'PED-' + ${p.idPedido}"></td>
+                        <td th:text="${p.cliente.nomeCliente}"></td>
+                        <td th:text="${#temporals.format(p.dataPedido, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td class="fw-bold text-success" th:text="'R$ ' + ${p.valorTotal}"></td>
+                        <td>
+                            <span class="badge bg-success" th:if="${p.statusPedido == 'CONCLUIDA'}">Concluído</span>
+                            <span class="badge bg-warning text-dark" th:unless="${p.statusPedido == 'CONCLUIDA'}">Pendente</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/pedidos/detalhes/{id}(id=${p.idPedido})}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-eye"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

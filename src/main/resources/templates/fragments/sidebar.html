@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="sidebar" class="list-group shadow-sm">
+    <a th:href="@{/dashboard}" class="list-group-item list-group-item-action">
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+    </a>
+    <a th:href="@{/clientes}" class="list-group-item list-group-item-action">
+        <i class="bi bi-people me-2"></i>Clientes
+    </a>
+    <a th:href="@{/categorias}" class="list-group-item list-group-item-action">
+        <i class="bi bi-tags me-2"></i>Categorias
+    </a>
+    <a th:href="@{/produtos}" class="list-group-item list-group-item-action">
+        <i class="bi bi-cart3 me-2"></i>Produtos
+    </a>
+    <a th:href="@{/pedidos}" class="list-group-item list-group-item-action">
+        <i class="bi bi-receipt me-2"></i>Pedidos
+    </a>
+    <a th:href="@{/relatorios/vendas}" class="list-group-item list-group-item-action">
+        <i class="bi bi-graph-up me-2"></i>Relatório Vendas
+    </a>
+    <a th:href="@{/relatorios/estoque}" class="list-group-item list-group-item-action">
+        <i class="bi bi-exclamation-triangle me-2"></i>Alertas Estoque
+    </a>
+</div>
+</html>

@@ -1,6 +1,9 @@
 package cetam.projeto02grupo02.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,12 +17,18 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPedido;
 
+    @NotNull(message = "O cliente é obrigatório")
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
-    @Column(name = "data_pedido")
-    private LocalDateTime dataPedido = LocalDateTime.now();
+    @CreationTimestamp
+    @Column(name = "data_pedido", updatable = false)
+    private LocalDateTime dataPedido;
+
+    @UpdateTimestamp
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
 
     @Column(name = "status_pedido", length = 20)
     private String statusPedido = "PENDENTE";
@@ -49,4 +58,7 @@ public class Pedido {
 
     public List<ItemPedido> getItens() { return itens; }
     public void setItens(List<ItemPedido> itens) { this.itens = itens; }
+
+    public LocalDateTime getDataAtualizacao() { return dataAtualizacao; }
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) { this.dataAtualizacao = dataAtualizacao; }
 }

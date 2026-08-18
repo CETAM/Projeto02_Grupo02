@@ -6,7 +6,9 @@ import cetam.projeto02grupo02.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/produtos")
@@ -41,7 +43,11 @@ public class ProdutoController {
     }
 
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Produto produto, @RequestParam(value = "estoqueInicial", required = false) Integer estoqueInicial) {
+    public String salvar(@Valid @ModelAttribute Produto produto, BindingResult result, @RequestParam(value = "estoqueInicial", required = false) Integer estoqueInicial, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("categorias", categoriaService.listarTodas());
+            return "produtos/formulario";
+        }
         produtoService.salvar(produto, estoqueInicial);
         return "redirect:/produtos";
     }

@@ -5,7 +5,9 @@ import cetam.projeto02grupo02.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/clientes")
@@ -35,7 +37,10 @@ public class ClienteController {
     }
 
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Cliente cliente) {
+    public String salvar(@Valid @ModelAttribute Cliente cliente, BindingResult result) {
+        if (result.hasErrors()) {
+            return "clientes/formulario";
+        }
         clienteService.salvar(cliente);
         return "redirect:/clientes";
     }

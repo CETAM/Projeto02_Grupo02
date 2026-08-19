@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Clientes')}"></head>
+<body class="d-flex">
+<div th:replace="~{fragments/layout :: sidebar('clientes')}"></div>
+<div class="flex-grow-1 d-flex flex-column">
+    <nav th:replace="~{fragments/layout :: topbar}"></nav>
+    <main class="p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Gestão de Clientes</h3>
+            <a th:href="@{/clientes/novo}" class="btn btn-purple"><i class="bi bi-person-plus-fill"></i> Novo Cliente</a>
+        </div>
 
+        <div class="card card-custom p-4 bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>E-mail</th>
+                        <th>Telefone</th>
+                        <th>Cadastro</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${clientes}">
+                        <td class="fw-semibold" th:text="${c.nomeCliente}"></td>
+                        <td th:text="${c.cpf}"></td>
+                        <td th:text="${c.email}"></td>
+                        <td th:text="${c.telefone}"></td>
+                        <td th:text="${#temporals.format(c.dataCadastro, 'dd/MM/yyyy')}"></td>
+                        <td>
+                            <a th:href="@{/clientes/editar/{id}(id=${c.idCliente})}" class="btn btn-outline-primary btn-sm me-1"><i class="bi bi-pencil"></i></a>
+                            <a th:href="@{/clientes/excluir/{id}(id=${c.idCliente})}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Deseja excluir este cliente?');"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

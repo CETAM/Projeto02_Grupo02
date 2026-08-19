@@ -1,0 +1,72 @@
+:root {
+    --pt-purple: #7c3aed;
+    --pt-dark: #0f172a;
+    --pt-light: #f8fafc;
+}
+
+body {
+    background-color: var(--pt-light);
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background-color: var(--pt-dark);
+    color: #fff;
+    width: 240px;
+}
+
+.sidebar .nav-link {
+    color: #94a3b8;
+    border-radius: 8px;
+    margin: 4px 12px;
+    padding: 10px 14px;
+    font-weight: 500;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background-color: rgba(124, 58, 237, 0.15);
+    color: #c4b5fd;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+}
+
+.navbar-top {
+    background-color: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    height: 60px;
+}
+
+.card-custom {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    background-color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+}
+
+.btn-purple {
+    background-color: var(--pt-purple);
+    color: #fff;
+    border: none;
+}
+
+.btn-purple:hover {
+    background-color: #6d28d9;
+    color: #fff;
+}
+
+.text-purple {
+    color: var(--pt-purple) !important;
+}
+
+.bg-purple {
+    background-color: var(--pt-purple) !important;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Produto')}"></head>
+<body class="d-flex">
+<div th:replace="~{fragments/layout :: sidebar('produtos')}"></div>
+<div class="flex-grow-1 d-flex flex-column">
+    <nav th:replace="~{fragments/layout :: topbar}"></nav>
+    <main class="p-4">
+        <div class="card card-custom p-4 bg-white mx-auto" style="max-width: 650px;">
+            <h4 class="fw-bold mb-4" th:text="${produto.idProduto != null} ? 'Editar Produto' : 'Novo Produto'"></h4>
+            <form th:action="@{/produtos/salvar}" th:object="${produto}" method="post">
+                <input type="hidden" th:field="*{idProduto}">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nome do Produto *</label>
+                    <input type="text" class="form-control" th:field="*{nomeProduto}" th:classappend="${#fields.hasErrors('nomeProduto')} ? 'is-invalid'" required>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nomeProduto')}" th:errors="*{nomeProduto}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Categoria *</label>
+                    <select class="form-select" th:field="*{categoria.idCategoria}" required>
+                        <option value="">Selecione uma categoria...</option>
+                        <option th:each="cat : ${categorias}" th:value="${cat.idCategoria}" th:text="${cat.nomeCategoria}"></option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Preço de Custo (R$) *</label>
+                        <input type="number" step="0.01" class="form-control" th:field="*{precoCusto}" th:classappend="${#fields.hasErrors('precoCusto')} ? 'is-invalid'" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('precoCusto')}" th:errors="*{precoCusto}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Preço de Venda (R$) *</label>
+                        <input type="number" step="0.01" class="form-control" th:field="*{precoVenda}" th:classappend="${#fields.hasErrors('precoVenda')} ? 'is-invalid'" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('precoVenda')}" th:errors="*{precoVenda}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Estoque Mínimo</label>
+                        <input type="number" class="form-control" th:field="*{estoqueMinimo}" value="5">
+                    </div>
+                    <div class="col-md-6 mb-3" th:if="${produto.idProduto == null}">
+                        <label class="form-label fw-semibold">Estoque Inicial</label>
+                        <input type="number" class="form-control" name="estoqueInicial" value="0">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Descrição do Produto</label>
+                    <textarea class="form-control" th:field="*{descricao}" rows="2"></textarea>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <a th:href="@{/produtos}" class="btn btn-light border">Cancelar</a>
+                    <button type="submit" class="btn btn-purple">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

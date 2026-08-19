@@ -134,3 +134,11 @@ update cliente set nome_cliente = "Izhac Nylton" where id_cliente = 3;
 update cliente set email = "ana.kelley@email.com" where id_cliente = 1;
 update cliente set email = "elano.barros@email.com" where id_cliente = 2;
 update cliente set email = "izhac.nylton@email.com" where id_cliente = 3;
+
+ALTER TABLE cliente ADD COLUMN data_atualizacao DATETIME;
+
+ALTER TABLE produto ADD COLUMN data_cadastro DATETIME;
+ALTER TABLE produto ADD COLUMN data_atualizacao DATETIME;
+
+ALTER TABLE pedido ADD COLUMN data_cadastro DATETIME;
+ALTER TABLE pedido ADD COLUMN data_atualizacao DATETIME;

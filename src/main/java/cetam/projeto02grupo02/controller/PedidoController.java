@@ -7,7 +7,11 @@ import cetam.projeto02grupo02.model.Produto;
 import cetam.projeto02grupo02.service.ClienteService;
 import cetam.projeto02grupo02.service.PedidoService;
 import cetam.projeto02grupo02.service.ProdutoService;
+import cetam.projeto02grupo02.service.RelatorioPdfService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +31,9 @@ public class PedidoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private RelatorioPdfService relatorioPdfService;
 
     @GetMapping
     public String listar(Model model) {
@@ -74,5 +81,21 @@ public class PedidoController {
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
         model.addAttribute("pedido", pedido);
         return "pedidos/detalhes";
+    }
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> baixarPdf(@PathVariable("id") Long id) {
+        Pedido pedido = pedidoService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+
+        byte[] pdfBytes = relatorioPdfService.gerarReciboPedidoPdf(pedido);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "pedido_" + id + ".pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfBytes);
     }
 }

@@ -40,6 +40,16 @@ public class EstoqueService {
     }
 
     @Transactional
+    public void verificarDisponibilidade(Produto produto, Integer quantidadeVendida) {
+        Estoque estoque = estoqueRepository.findByProdutoIdProduto(produto.getIdProduto())
+                .orElseThrow(() -> new IllegalArgumentException("Estoque não encontrado para o produto: " + produto.getNomeProduto()));
+
+        if (estoque.getQuantidadeAtual() < quantidadeVendida) {
+            throw new IllegalStateException("Estoque insuficiente para o produto: " + produto.getNomeProduto());
+        }
+    }
+
+    @Transactional
     public void baixarEstoque(Produto produto, Integer quantidadeVendida) {
         Estoque estoque = estoqueRepository.findByProdutoIdProduto(produto.getIdProduto())
                 .orElseThrow(() -> new IllegalArgumentException("Estoque não encontrado para o produto: " + produto.getNomeProduto()));

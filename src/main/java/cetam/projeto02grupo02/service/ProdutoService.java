@@ -27,7 +27,7 @@ public class ProdutoService {
     private cetam.projeto02grupo02.repository.AlertaEstoqueRepository alertaEstoqueRepository;
 
     public List<Produto> listarTodos() {
-        return produtoRepository.findAll();
+        return produtoRepository.findByAtivoTrue();
     }
 
     public Optional<Produto> buscarPorId(Long id) {
@@ -51,11 +51,13 @@ public class ProdutoService {
 
     @Transactional
     public void excluir(Long id) {
-        if (itemPedidoRepository.existsByProdutoIdProduto(id)) {
-            throw new IllegalStateException("Este produto não pode ser apagado pois está atrelado a um pedido existente.");
-        }
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        produto.setAtivo(false);
+        produtoRepository.save(produto);
+
+        // Remove alertas para este produto inativo
         alertaEstoqueRepository.deleteByProdutoIdProduto(id);
-        estoqueRepository.deleteByProdutoIdProduto(id);
-        produtoRepository.deleteById(id);
     }
 }

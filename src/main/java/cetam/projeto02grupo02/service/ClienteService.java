@@ -16,7 +16,7 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public List<Cliente> listarTodos() {
-        return clienteRepository.findAll();
+        return clienteRepository.findByAtivoTrue();
     }
 
     public Optional<Cliente> buscarPorId(Long id) {
@@ -30,6 +30,9 @@ public class ClienteService {
 
     @Transactional
     public void excluir(Long id) {
-        clienteRepository.deleteById(id);
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+        cliente.setAtivo(false);
+        clienteRepository.save(cliente);
     }
 }

@@ -19,4 +19,10 @@ public class AlertaController {
         model.addAttribute("alertas", alertaEstoqueRepository.findAll());
         return "alertas/lista";
     }
+
+    @Autowired
+    private cetam.projeto02grupo02.repository.EstoqueRepository estoqueRepository;
+
+    @Autowired
+    private cetam.projeto02grupo02.repository.ItemPedidoRepository itemPedidoRepository;
 }

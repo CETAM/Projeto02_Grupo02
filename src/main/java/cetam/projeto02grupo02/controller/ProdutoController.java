@@ -53,8 +53,13 @@ public class ProdutoController {
     }
 
     @GetMapping("/excluir/{id}")
-    public String excluir(@PathVariable("id") Long id) {
-        produtoService.excluir(id);
+    public String excluir(@PathVariable("id") Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes attributes) {
+        try {
+            produtoService.excluir(id);
+            attributes.addFlashAttribute("mensagemSucesso", "Produto excluído com sucesso.");
+        } catch (IllegalStateException e) {
+            attributes.addFlashAttribute("mensagemErro", e.getMessage());
+        }
         return "redirect:/produtos";
     }
 }

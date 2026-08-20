@@ -56,6 +56,8 @@ public class EstoqueService {
     }
 
     private void verificarEGerarAlerta(Produto produto, int estoqueAtual) {
+        alertaEstoqueRepository.deleteByProdutoIdProduto(produto.getIdProduto());
+
         if (estoqueAtual <= produto.getEstoqueMinimo()) {
             AlertaEstoque alerta = new AlertaEstoque();
             alerta.setProduto(produto);

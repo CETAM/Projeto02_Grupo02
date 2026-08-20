@@ -37,6 +37,9 @@ public class Produto {
     @Column(name = "estoque_minimo")
     private Integer estoqueMinimo = 5;
 
+    @Column(name = "ativo")
+    private Boolean ativo = true;
+
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
@@ -68,6 +71,9 @@ public class Produto {
 
     public Integer getEstoqueMinimo() { return estoqueMinimo; }
     public void setEstoqueMinimo(Integer estoqueMinimo) { this.estoqueMinimo = estoqueMinimo; }
+
+    public Boolean getAtivo() { return ativo; }
+    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
 
     public Categoria getCategoria() { return categoria; }
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }

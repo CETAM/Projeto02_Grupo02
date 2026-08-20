@@ -10,6 +10,9 @@ public class Estoque {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idEstoque;
 
+    @Version
+    private Long version;
+
     @OneToOne
     @JoinColumn(name = "id_produto", nullable = false, unique = true)
     private Produto produto;

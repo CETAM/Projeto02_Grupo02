@@ -31,6 +31,9 @@ public class Cliente {
     @Column(name = "telefone", length = 15)
     private String telefone;
 
+    @Column(name = "ativo")
+    private Boolean ativo = true;
+
     @CreationTimestamp
     @Column(name = "data_cadastro", updatable = false)
     private LocalDateTime dataCadastro;
@@ -55,6 +58,9 @@ public class Cliente {
 
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    public Boolean getAtivo() { return ativo; }
+    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
 
     public LocalDateTime getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }

@@ -8,13 +8,19 @@
     <main class="p-4">
         <h3 class="fw-bold mb-4">Novo Pedido de Venda</h3>
 
+        <div th:if="${mensagemErro}" class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-octagon-fill fs-4 me-3"></i>
+            <span th:text="${mensagemErro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <form th:action="@{/pedidos/salvar}" method="post" id="formPedido">
             <div class="row g-4">
                 <!-- Painel Esquerdo: Seleção do Cliente e Produtos -->
                 <div class="col-md-5">
                     <div class="card card-custom p-4 bg-white mb-4">
                         <h5 class="fw-bold mb-3">1. Selecionar Cliente</h5>
-                        <select class="form-select mb-3" name="idCliente" required>
+                        <select class="form-select select-search mb-3" name="idCliente" required>
                             <option value="">— Escolha o Cliente —</option>
                             <option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nomeCliente} + ' (CPF: ' + ${c.cpf} + ')'"></option>
                         </select>
@@ -24,7 +30,7 @@
                         <h5 class="fw-bold mb-3">2. Adicionar Itens</h5>
                         <div class="mb-3">
                             <label class="form-label">Produto</label>
-                            <select class="form-select" id="selectProduto">
+                            <select class="form-select select-search" id="selectProduto">
                                 <option value="">— Escolha o Produto —</option>
                                 <option th:each="pr : ${produtos}"
                                         th:value="${pr.idProduto}"
@@ -84,8 +90,9 @@
         const prodId = select.value;
         if (!prodId) return alert("Selecione um produto!");
 
-        const nome = select.options[select.selectedIndex].getAttribute("data-nome");
-        const preco = parseFloat(select.options[select.selectedIndex].getAttribute("data-preco"));
+        const option = select.querySelector(`option[value="${prodId}"]`);
+        const nome = option.getAttribute("data-nome");
+        const preco = parseFloat(option.getAttribute("data-preco"));
         const qtd = parseInt(document.getElementById("inputQtd").value);
         const subtotal = preco * qtd;
 

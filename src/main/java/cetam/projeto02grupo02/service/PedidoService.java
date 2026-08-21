@@ -40,13 +40,27 @@ public class PedidoService {
     @Transactional
     public Pedido criarPedido(Pedido pedido, List<ItemPedido> itens) {
         BigDecimal total = BigDecimal.ZERO;
+        java.util.List<String> errosEstoque = new java.util.ArrayList<>();
+
+        // Validação prévia em lote
+        for (ItemPedido item : itens) {
+            try {
+                estoqueService.verificarDisponibilidade(item.getProduto(), item.getQuantidade());
+            } catch (IllegalStateException e) {
+                errosEstoque.add(item.getProduto().getNomeProduto());
+            }
+        }
+
+        if (!errosEstoque.isEmpty()) {
+            throw new IllegalStateException("Estoque insuficiente para: " + String.join(", ", errosEstoque));
+        }
 
         for (ItemPedido item : itens) {
             item.setPedido(pedido);
             BigDecimal subtotal = item.getValorUnitario().multiply(BigDecimal.valueOf(item.getQuantidade()));
             total = total.add(subtotal);
 
-            // Realiza a baixa do estoque e valida disponibilidade
+            // Realiza a baixa do estoque
             estoqueService.baixarEstoque(item.getProduto(), item.getQuantidade());
         }
 

@@ -57,7 +57,8 @@ public class ProdutoService {
         produto.setAtivo(false);
         produtoRepository.save(produto);
 
-        // Remove alertas para este produto inativo
+        // Remove alertas e estoque para este produto inativo
         alertaEstoqueRepository.deleteByProdutoIdProduto(id);
+        estoqueRepository.deleteByProdutoIdProduto(id);
     }
 }

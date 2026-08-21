@@ -50,29 +50,41 @@ public class PedidoController {
 
     @PostMapping("/salvar")
     public String salvar(@RequestParam("idCliente") Long idCliente,
-                         @RequestParam("produtosIds") List<Long> produtosIds,
-                         @RequestParam("quantidades") List<Integer> quantidades) {
+                         @RequestParam(value = "produtosIds", required = false) List<Long> produtosIds,
+                         @RequestParam(value = "quantidades", required = false) List<Integer> quantidades,
+                         org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
 
-        Cliente cliente = clienteService.buscarPorId(idCliente)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente inválido"));
-
-        Pedido pedido = new Pedido();
-        pedido.setCliente(cliente);
-
-        List<ItemPedido> itens = new ArrayList<>();
-        for (int i = 0; i < produtosIds.size(); i++) {
-            Produto produto = produtoService.buscarPorId(produtosIds.get(i))
-                    .orElseThrow(() -> new IllegalArgumentException("Produto inválido"));
-
-            ItemPedido item = new ItemPedido();
-            item.setProduto(produto);
-            item.setQuantidade(quantidades.get(i));
-            item.setValorUnitario(produto.getPrecoVenda());
-            itens.add(item);
+        if (produtosIds == null || produtosIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "O pedido deve conter pelo menos um item.");
+            return "redirect:/pedidos/novo";
         }
 
-        pedidoService.criarPedido(pedido, itens);
-        return "redirect:/pedidos";
+        try {
+            Cliente cliente = clienteService.buscarPorId(idCliente)
+                    .orElseThrow(() -> new IllegalArgumentException("Cliente inválido"));
+
+            Pedido pedido = new Pedido();
+            pedido.setCliente(cliente);
+
+            List<ItemPedido> itens = new ArrayList<>();
+            for (int i = 0; i < produtosIds.size(); i++) {
+                Produto produto = produtoService.buscarPorId(produtosIds.get(i))
+                        .orElseThrow(() -> new IllegalArgumentException("Produto inválido"));
+
+                ItemPedido item = new ItemPedido();
+                item.setProduto(produto);
+                item.setQuantidade(quantidades.get(i));
+                item.setValorUnitario(produto.getPrecoVenda());
+                itens.add(item);
+            }
+
+            pedidoService.criarPedido(pedido, itens);
+            return "redirect:/pedidos";
+
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", e.getMessage());
+            return "redirect:/pedidos/novo";
+        }
     }
 
     @GetMapping("/detalhes/{id}")

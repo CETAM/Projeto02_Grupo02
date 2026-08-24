@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Controle de Estoque')}"></head>
+<body class="d-flex">
+<div th:replace="~{fragments/layout :: sidebar('estoque')}"></div>
+<div class="flex-grow-1 d-flex flex-column">
+    <nav th:replace="~{fragments/layout :: topbar}"></nav>
+    <main class="p-4">
+        <h3 class="fw-bold mb-4">Controle de Estoque em Tempo Real</h3>
+
+        <div class="card card-custom p-4 bg-white">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Produto</th>
+                    <th>Qtd. Atual</th>
+                    <th>Estoque Mínimo</th>
+                    <th>Status</th>
+                    <th>Ajuste Manual</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${estoques}">
+                    <td class="fw-semibold" th:text="${e.produto.nomeProduto}"></td>
+                    <td class="fs-5 fw-bold" th:text="${e.quantidadeAtual}"></td>
+                    <td th:text="${e.produto.estoqueMinimo}"></td>
+                    <td>
+                        <span class="badge bg-danger" th:if="${e.quantidadeAtual <= 0}">Zerado</span>
+                        <span class="badge bg-warning text-dark" th:if="${e.quantidadeAtual > 0 and e.quantidadeAtual <= e.produto.estoqueMinimo}">Crítico</span>
+                        <span class="badge bg-success" th:if="${e.quantidadeAtual > e.produto.estoqueMinimo}">Normal</span>
+                    </td>
+                    <td>
+                        <form th:action="@{/estoque/ajustar}" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="idProduto" th:value="${e.produto.idProduto}">
+                            <input type="number" name="quantidade" class="form-control form-control-sm" style="width: 90px;" th:value="${e.quantidadeAtual}">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Atualizar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

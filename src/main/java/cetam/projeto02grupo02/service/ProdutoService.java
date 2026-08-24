@@ -20,6 +20,12 @@ public class ProdutoService {
     @Autowired
     private EstoqueRepository estoqueRepository;
 
+    @Autowired
+    private cetam.projeto02grupo02.repository.ItemPedidoRepository itemPedidoRepository;
+
+    @Autowired
+    private cetam.projeto02grupo02.repository.AlertaEstoqueRepository alertaEstoqueRepository;
+
     public List<Produto> listarTodos() {
         return produtoRepository.findAll();
     }
@@ -45,6 +51,11 @@ public class ProdutoService {
 
     @Transactional
     public void excluir(Long id) {
+        if (itemPedidoRepository.existsByProdutoIdProduto(id)) {
+            throw new IllegalStateException("Este produto não pode ser apagado pois está atrelado a um pedido existente.");
+        }
+        alertaEstoqueRepository.deleteByProdutoIdProduto(id);
+        estoqueRepository.deleteByProdutoIdProduto(id);
         produtoRepository.deleteById(id);
     }
 }

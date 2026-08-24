@@ -7,7 +7,7 @@ import cetam.projeto02grupo02.model.Produto;
 import cetam.projeto02grupo02.service.ClienteService;
 import cetam.projeto02grupo02.service.PedidoService;
 import cetam.projeto02grupo02.service.ProdutoService;
-import cetam.projeto02grupo02.service.RelatorioPdfService;
+import cetam.projeto02grupo02.service.PdfReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/pedidos")
@@ -33,7 +35,7 @@ public class PedidoController {
     private ProdutoService produtoService;
 
     @Autowired
-    private RelatorioPdfService relatorioPdfService;
+    private PdfReportService pdfReportService;
 
     @GetMapping
     public String listar(Model model) {
@@ -97,17 +99,25 @@ public class PedidoController {
 
     @GetMapping("/{id}/pdf")
     public ResponseEntity<byte[]> baixarPdf(@PathVariable("id") Long id) {
-        Pedido pedido = pedidoService.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+        try {
+            Pedido pedido = pedidoService.buscarPorId(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
 
-        byte[] pdfBytes = relatorioPdfService.gerarReciboPedidoPdf(pedido);
+            Map<String, Object> dados = new HashMap<>();
+            dados.put("pedido", pedido);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "pedido_" + id + ".pdf");
+            byte[] pdfBytes = pdfReportService.gerarPdf("pedidos/recibo", dados);
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(pdfBytes);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=pedido_" + id + ".pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

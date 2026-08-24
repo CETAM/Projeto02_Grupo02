@@ -3,6 +3,7 @@ package cetam.projeto02grupo02.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
@@ -20,14 +21,17 @@ public class Cliente {
     private String nomeCliente;
 
     @NotBlank(message = "O CPF é obrigatório")
+    @Pattern(regexp = "(^\\d{11}$)|(^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$)", message = "O CPF deve conter apenas números ou formato válido")
     @Column(name = "cpf", nullable = false, unique = true, length = 14)
     private String cpf;
 
+    @NotBlank(message = "O e-mail é obrigatório")
     @Email(message = "E-mail inválido")
-    @Column(name = "email", length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
     @NotBlank(message = "O telefone é obrigatório")
+    @Pattern(regexp = "(^\\d{10,11}$)|(^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$)", message = "O telefone deve conter apenas números ou formato válido")
     @Column(name = "telefone", length = 15)
     private String telefone;
 

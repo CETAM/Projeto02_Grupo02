@@ -1,6 +1,6 @@
 -- Criação do banco de dados
-CREATE DATABASE prototech_db;
-USE prototech_db;
+CREATE DATABASE grupo02_db;
+USE grupo02_db;
 
 -- ==========================================
 -- 1. Criação das Tabelas

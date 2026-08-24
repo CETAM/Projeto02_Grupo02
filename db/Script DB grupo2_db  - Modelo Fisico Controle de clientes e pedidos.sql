@@ -1,6 +1,6 @@
 -- Criação do banco de dados
-CREATE DATABASE prototech_db;
-USE prototech_db;
+CREATE DATABASE grupo02_db;
+USE grupo02_db;
 
 -- ==========================================
 -- 1. Criação das Tabelas
@@ -18,7 +18,7 @@ CREATE TABLE Cliente (
     id_cliente BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome_cliente VARCHAR(100) NOT NULL,
     cpf VARCHAR(14) NOT NULL UNIQUE,
-    email VARCHAR(100),
+    email VARCHAR(100) NOT NULL UNIQUE,
     telefone VARCHAR(15),
     ativo BOOLEAN DEFAULT TRUE,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -124,3 +124,4 @@ INSERT INTO Estoque (version, id_produto, quantidade_atual) VALUES
 -- Inserindo um Usuário Admin
 INSERT INTO UsuarioAdmin (nome, login, senha) VALUES
 ('Administrador', 'admin', 'admin123');
+

@@ -59,6 +59,22 @@
             </div>
         </div>
 
+        <!-- Gráfico de Vendas -->
+        <div class="card card-custom p-4 bg-white mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Visão Geral de Vendas</h5>
+            </div>
+
+            <div th:if="${pedidosRecentes == null or pedidosRecentes.isEmpty()}" class="alert alert-warning d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>Nenhuma venda cadastrada até o momento.</div>
+            </div>
+
+            <div th:unless="${pedidosRecentes == null or pedidosRecentes.isEmpty()}">
+                <canvas id="graficoVendas" height="80"></canvas>
+            </div>
+        </div>
+
         <!-- Tabela de Pedidos Recentes -->
         <div class="card card-custom p-4 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -102,5 +118,53 @@
 </div>
 
 <div th:replace="~{fragments/layout :: scripts}"></div>
+
+<!-- Chart.js para o Gráfico de Vendas -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var labels = [];
+        var values = [];
+
+        /*[# th:each="p : ${pedidosRecentes}"]*/
+        labels.push('PED-' + /*[[${p.idPedido}]]*/ '0');
+        values.push(/*[[${p.valorTotal}]]*/ 0);
+        /*[/]*/
+
+        if (labels.length > 0) {
+            labels.reverse();
+            values.reverse();
+
+            var ctx = document.getElementById('graficoVendas');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Valor (R$)',
+                            data: values,
+                            borderColor: '#7c3aed',
+                            backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            pointBackgroundColor: '#7c3aed'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
 </body>
 </html>

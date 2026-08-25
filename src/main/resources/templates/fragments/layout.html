@@ -13,60 +13,69 @@
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Controle de estado da Sidebar para evitar piscar -->
+    <script>
+        if (sessionStorage.getItem('sidebarState') === 'expanded') {
+            document.documentElement.classList.add('sidebar-expanded');
+        }
+    </script>
 </head>
 
 <body>
 
 <!-- Sidebar Fragment -->
 <div th:fragment="sidebar(menuAtivo)" class="sidebar d-flex flex-column flex-shrink-0">
-    <div class="p-3 border-bottom border-secondary d-flex align-items-center gap-2">
-        <i class="bi bi-cpu-fill fs-4 text-purple" style="color: #a855f7;"></i>
-        <span class="fs-5 fw-bold text-white">Proto<span style="color: #a855f7;">Tech</span></span>
+    <div class="p-3 border-bottom border-secondary d-flex align-items-center">
+        <i class="bi bi-list fs-4 text-white" id="sidebarToggle" style="cursor: pointer; min-width: 35px;" title="Menu"></i>
+        <div class="d-flex align-items-center gap-2 sidebar-text">
+            <i class="bi bi-cpu-fill fs-4 text-purple" style="color: #a855f7;"></i>
+            <span class="fs-5 fw-bold text-white">Proto<span style="color: #a855f7;">Tech</span></span>
+        </div>
     </div>
     <ul class="nav nav-pills flex-column mb-auto mt-3">
         <li>
             <a th:href="@{/dashboard}" class="nav-link" th:classappend="${menuAtivo == 'dashboard'} ? 'active'">
-                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                <i class="bi bi-grid-1x2-fill"></i> <span class="sidebar-text">Dashboard</span>
             </a>
         </li>
         <li>
             <a th:href="@{/clientes}" class="nav-link" th:classappend="${menuAtivo == 'clientes'} ? 'active'">
-                <i class="bi bi-people-fill"></i> Clientes
+                <i class="bi bi-people-fill"></i> <span class="sidebar-text">Clientes</span>
             </a>
         </li>
         <li>
             <a th:href="@{/categorias}" class="nav-link" th:classappend="${menuAtivo == 'categorias'} ? 'active'">
-                <i class="bi bi-tags-fill"></i> Categorias
+                <i class="bi bi-tags-fill"></i> <span class="sidebar-text">Categorias</span>
             </a>
         </li>
         <li>
             <a th:href="@{/produtos}" class="nav-link" th:classappend="${menuAtivo == 'produtos'} ? 'active'">
-                <i class="bi bi-box-seam-fill"></i> Produtos
+                <i class="bi bi-box-seam-fill"></i> <span class="sidebar-text">Produtos</span>
             </a>
         </li>
         <li>
             <a th:href="@{/estoque}" class="nav-link" th:classappend="${menuAtivo == 'estoque'} ? 'active'">
-                <i class="bi bi-boxes"></i> Estoque
+                <i class="bi bi-boxes"></i> <span class="sidebar-text">Estoque</span>
             </a>
         </li>
         <li>
             <a th:href="@{/alertas}" class="nav-link text-danger" th:classappend="${menuAtivo == 'alertas'} ? 'active text-white bg-danger'">
-                <i class="bi bi-exclamation-triangle-fill"></i> Alertas
+                <i class="bi bi-exclamation-triangle-fill"></i> <span class="sidebar-text">Alertas</span>
             </a>
         </li>
         <li>
             <a th:href="@{/pedidos}" class="nav-link" th:classappend="${menuAtivo == 'pedidos'} ? 'active'">
-                <i class="bi bi-cart-check-fill"></i> Pedidos
+                <i class="bi bi-cart-check-fill"></i> <span class="sidebar-text">Pedidos</span>
             </a>
         </li>
         <li>
             <a th:href="@{/relatorios}" class="nav-link" th:classappend="${menuAtivo == 'relatorios'} ? 'active'">
-                <i class="bi bi-file-earmark-bar-graph-fill"></i> Relatórios
+                <i class="bi bi-file-earmark-bar-graph-fill"></i> <span class="sidebar-text">Relatórios</span>
             </a>
         </li>
     </ul>
     <div class="p-3 border-top border-secondary text-muted small">
-        <i class="bi bi-shield-check"></i> Admin Master
+        <i class="bi bi-shield-check"></i> <span class="sidebar-text">Admin Master</span>
     </div>
 </div>
 
@@ -97,6 +106,18 @@
     </script>
     <!-- Custom JS -->
     <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Sincroniza o estado da sidebar no sessionStorage (agora com clique)
+        document.addEventListener("DOMContentLoaded", function() {
+            var toggleBtn = document.getElementById('sidebarToggle');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    var isExpanded = document.documentElement.classList.toggle('sidebar-expanded');
+                    sessionStorage.setItem('sidebarState', isExpanded ? 'expanded' : 'collapsed');
+                });
+            }
+        });
+    </script>
 </div>
 
 </body>

@@ -59,19 +59,37 @@
             </div>
         </div>
 
-        <!-- Gráfico de Vendas -->
-        <div class="card card-custom p-4 bg-white mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0">Visão Geral de Vendas</h5>
+        <!-- Gráficos -->
+        <div class="row mb-4 g-3">
+            <!-- Gráfico de Vendas -->
+            <div class="col-md-8">
+                <div class="card card-custom p-4 bg-white h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Visão Geral de Vendas</h5>
+                    </div>
+
+                    <div th:if="${pedidosRecentes == null or pedidosRecentes.isEmpty()}" class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                        <div>Nenhuma venda cadastrada até o momento.</div>
+                    </div>
+
+                    <div th:unless="${pedidosRecentes == null or pedidosRecentes.isEmpty()}" style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="graficoVendas"></canvas>
+                    </div>
+                </div>
             </div>
 
-            <div th:if="${pedidosRecentes == null or pedidosRecentes.isEmpty()}" class="alert alert-warning d-flex align-items-center" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-                <div>Nenhuma venda cadastrada até o momento.</div>
-            </div>
-
-            <div th:unless="${pedidosRecentes == null or pedidosRecentes.isEmpty()}">
-                <canvas id="graficoVendas" height="80"></canvas>
+            <!-- Gráfico de Produtos Mais Vendidos -->
+            <div class="col-md-4">
+                <div class="card card-custom p-4 bg-white h-100 text-center">
+                    <div class="mb-3">
+                        <h5 class="fw-bold mb-0">Mais Vendidos</h5>
+                        <small class="text-muted">Por quantidade</small>
+                    </div>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="graficoMaisVendidos"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -154,6 +172,7 @@
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false }
                         },
@@ -162,6 +181,53 @@
                         }
                     }
                 });
+            }
+        }
+
+        // Gráfico de Produtos Mais Vendidos (Dados Reais do BD)
+        var ctxMaisVendidos = document.getElementById('graficoMaisVendidos');
+        if (ctxMaisVendidos) {
+            var labelsMaisVendidos = [];
+            var valuesMaisVendidos = [];
+
+            /*[# th:each="mv : ${maisVendidos}"]*/
+            labelsMaisVendidos.push(/*[[${mv[0]}]]*/ 'Produto');
+            valuesMaisVendidos.push(/*[[${mv[1]}]]*/ 0);
+            /*[/]*/
+
+            if (labelsMaisVendidos.length > 0) {
+                new Chart(ctxMaisVendidos, {
+                    type: 'bar',
+                    data: {
+                        labels: labelsMaisVendidos,
+                        datasets: [{
+                            data: valuesMaisVendidos,
+                            backgroundColor: '#b347ff',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                beginAtZero: true
+                            },
+                            y: {
+                                display: true,
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            } else {
+                var chartContainer = ctxMaisVendidos.parentElement;
+                chartContainer.innerHTML = '<div class="alert alert-info text-center mt-4">Nenhum produto vendido ainda.</div>';
             }
         }
     });

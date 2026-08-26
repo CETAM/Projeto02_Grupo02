@@ -13,4 +13,7 @@ public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Long> {
     @org.springframework.data.jpa.repository.Modifying
     @org.springframework.data.jpa.repository.Query("DELETE FROM ItemPedido i WHERE i.produto.idProduto = :idProduto")
     void deleteByProdutoIdProduto(@org.springframework.data.repository.query.Param("idProduto") Long idProduto);
+
+    @org.springframework.data.jpa.repository.Query("SELECT i.produto.nomeProduto, SUM(i.quantidade) as total FROM ItemPedido i GROUP BY i.produto.nomeProduto ORDER BY total DESC")
+    List<Object[]> findTopProdutosMaisVendidos(org.springframework.data.domain.Pageable pageable);
 }

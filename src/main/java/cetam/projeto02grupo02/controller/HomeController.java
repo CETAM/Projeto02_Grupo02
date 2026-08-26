@@ -24,6 +24,9 @@ public class HomeController {
     @Autowired
     private EstoqueService estoqueService;
 
+    @Autowired
+    private cetam.projeto02grupo02.repository.ItemPedidoRepository itemPedidoRepository;
+
     @GetMapping("/")
     public String index() {
         return "redirect:/dashboard";
@@ -35,6 +38,7 @@ public class HomeController {
         model.addAttribute("totalProdutos", produtoService.listarTodos().size());
         model.addAttribute("pedidosRecentes", pedidoService.listarTodos());
         model.addAttribute("estoqueLista", estoqueService.listarTodos());
+        model.addAttribute("maisVendidos", itemPedidoRepository.findTopProdutosMaisVendidos(org.springframework.data.domain.PageRequest.of(0, 5)));
         return "dashboard";
     }
 }

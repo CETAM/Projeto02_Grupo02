@@ -41,7 +41,14 @@ public class ClienteController {
         if (result.hasErrors()) {
             return "clientes/formulario";
         }
-        clienteService.salvar(cliente);
+
+        try {
+            clienteService.salvar(cliente);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            result.rejectValue("cpf", "error.cliente", "Já existe um cliente cadastrado com este CPF.");
+            return "clientes/formulario";
+        }
+
         return "redirect:/clientes";
     }
 

@@ -30,8 +30,7 @@ public class Cliente {
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @NotBlank(message = "O telefone é obrigatório")
-    @Pattern(regexp = "(^\\d{10,11}$)|(^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$)", message = "O telefone deve conter apenas números ou formato válido")
+    @Pattern(regexp = "(^$)|(^\\d{10,11}$)|(^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$)", message = "O telefone deve conter apenas números ou formato válido")
     @Column(name = "telefone", length = 15)
     private String telefone;
 

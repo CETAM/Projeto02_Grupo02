@@ -34,6 +34,7 @@ public class Produto {
     @Column(name = "preco_venda", nullable = false, precision = 10, scale = 2)
     private BigDecimal precoVenda;
 
+    @Min(value = 0, message = "O estoque mínimo não pode ser negativo")
     @Column(name = "estoque_minimo")
     private Integer estoqueMinimo = 5;
 

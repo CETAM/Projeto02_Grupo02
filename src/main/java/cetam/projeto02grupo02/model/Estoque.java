@@ -1,6 +1,7 @@
 package cetam.projeto02grupo02.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "Estoque")
@@ -17,6 +18,7 @@ public class Estoque {
     @JoinColumn(name = "id_produto", nullable = false, unique = true)
     private Produto produto;
 
+    @Min(value = 0, message = "A quantidade em estoque não pode ser negativa")
     @Column(name = "quantidade_atual")
     private Integer quantidadeAtual = 0;
 

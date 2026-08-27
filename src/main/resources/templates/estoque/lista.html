@@ -32,7 +32,7 @@
                     <td>
                         <form th:action="@{/estoque/ajustar}" method="post" class="d-flex gap-2">
                             <input type="hidden" name="idProduto" th:value="${e.produto.idProduto}">
-                            <input type="number" name="quantidade" class="form-control form-control-sm" style="width: 90px;" th:value="${e.quantidadeAtual}">
+                            <input type="number" name="quantidade" min="0" class="form-control form-control-sm" style="width: 90px;" th:value="${e.quantidadeAtual}">
                             <button type="submit" class="btn btn-outline-secondary btn-sm">Atualizar</button>
                         </form>
                     </td>

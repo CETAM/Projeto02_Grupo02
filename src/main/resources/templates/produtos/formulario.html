@@ -37,11 +37,11 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">Estoque Mínimo</label>
-                        <input type="number" class="form-control" th:field="*{estoqueMinimo}" value="5">
+                        <input type="number" min="0" class="form-control" th:field="*{estoqueMinimo}" value="5">
                     </div>
                     <div class="col-md-6 mb-3" th:if="${produto.idProduto == null}">
                         <label class="form-label fw-semibold">Estoque Inicial</label>
-                        <input type="number" class="form-control" name="estoqueInicial" value="0">
+                        <input type="number" min="0" class="form-control" name="estoqueInicial" value="0">
                     </div>
                 </div>
                 <div class="mb-4">
